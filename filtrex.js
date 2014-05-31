@@ -51,7 +51,7 @@ function compileExpression(expression, extraFunctions /* optional */) {
     }
     var func = new Function('functions', 'data', 'unknown', js.join(''));
     return function(data) {
-      return func(functions, data, unknown);
+        return func(functions, data, unknown);
     };
 }
 
