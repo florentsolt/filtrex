@@ -158,8 +158,8 @@ function filtrexParser() {
                 ['SYMBOL' , code(['data["', 1, '"]'])],
                 ['SYMBOL ( argsList )', code(['(functions.hasOwnProperty("', 1, '") ? functions.', 1, '(', 3, ') : unknown("', 1, '"))'])],
                 ['e in ( inSet )', code([1, ' in (function(o) { ', 4, 'return o; })({})'])],
-                ['SYMBOL of e', code([3, '.map(function(i){ return i["', 1, '"]})'])],
                 ['e not in ( inSet )', code(['!(', 1, ' in (function(o) { ', 5, 'return o; })({}))'])],
+                ['SYMBOL of e', code([3, '.map(function(i){ return i["', 1, '"]})'])],
             ],
             argsList: [
                 ['e', code([1], true)],

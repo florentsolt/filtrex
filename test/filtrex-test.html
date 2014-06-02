@@ -135,15 +135,21 @@ tests({
     },
 
     'of': function() {
-        eq(3, compileExpression('max(item of array)', {
+        eq(3, compileExpression('max(prop of objects)', {
             max: function(o){ return Math.max.apply(null, o);}
-        })({'array':[
-            {'item': 1},{'item': 2},{'item': 3}
+        })({'objects':[
+            {'prop': 1},{'prop': 2},{'prop': 3}
         ]}));
-        eq(3, compileExpression('max(foo.bar of array)', {
+        eq(3, compileExpression('max(foo.bar of objects)', {
             max: function(o){ return Math.max.apply(null, o);}
-        })({'array':[
+        })({'objects':[
             {'foo.bar' : 1},{'foo.bar' : 2},{'foo.bar' : 3},
+        ]}));
+        eq(3, compileExpression('max(strlen(prop of objects))', {
+          max: function(o){ return Math.max.apply(null, o);},
+          strlen: function(o){ return o.map(function(s) {return s.length})}
+        })({'objects':[
+            {'prop': '1'},{'prop': '22'},{'prop': '333'}
         ]}));
     },
 
