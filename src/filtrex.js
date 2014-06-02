@@ -18,9 +18,7 @@ function compileExpression(expression, extraFunctions /* optional */) {
         min: Math.min,
         random: Math.random,
         round: Math.round,
-        sqrt: Math.sqrt,
-        map: function(o) {
-        }
+        sqrt: Math.sqrt
     };
     if (extraFunctions) {
         for (var name in extraFunctions) {
@@ -54,9 +52,7 @@ function compileExpression(expression, extraFunctions /* optional */) {
 
     function map(o, p) {
       if (Array.isArray(o)) {
-        var result = o.map(function(i){ return i[p]});
-        result.mapped = true; // Let other functions the array has been mapped
-        return result;
+        return o.map(function(i){ return i[p]});
       } else {
         throw 'You have to use an array next to "of"';
       }
