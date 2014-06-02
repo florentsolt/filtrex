@@ -19,6 +19,8 @@ function compileExpression(expression, extraFunctions /* optional */) {
         random: Math.random,
         round: Math.round,
         sqrt: Math.sqrt,
+        map: function(o) {
+        }
     };
     if (extraFunctions) {
         for (var name in extraFunctions) {
@@ -49,9 +51,20 @@ function compileExpression(expression, extraFunctions /* optional */) {
     function unknown(funcName) {
         throw 'Unknown function: ' + funcName + '()';
     }
-    var func = new Function('functions', 'data', 'unknown', js.join(''));
+
+    function map(o, p) {
+      if (Array.isArray(o)) {
+        var result = o.map(function(i){ return i[p]});
+        result.mapped = true; // Let other functions the array has been mapped
+        return result;
+      } else {
+        throw 'You have to use an array next to "of"';
+      }
+    }
+
+    var func = new Function('functions', 'data', 'map', 'unknown', js.join(''));
     return function(data) {
-        return func(functions, data, unknown);
+        return func(functions, data, map, unknown);
     };
 }
 
@@ -159,7 +172,7 @@ function filtrexParser() {
                 ['SYMBOL ( argsList )', code(['(functions.hasOwnProperty("', 1, '") ? functions.', 1, '(', 3, ') : unknown("', 1, '"))'])],
                 ['e in ( inSet )', code([1, ' in (function(o) { ', 4, 'return o; })({})'])],
                 ['e not in ( inSet )', code(['!(', 1, ' in (function(o) { ', 5, 'return o; })({}))'])],
-                ['SYMBOL of e', code([3, '.map(function(i){ return i["', 1, '"]})'])],
+                ['SYMBOL of e', code(['map(', 3, ',"', 1, '")'])],
             ],
             argsList: [
                 ['e', code([1], true)],
