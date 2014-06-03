@@ -108,6 +108,7 @@ function filtrexParser() {
                 ['or[^\\w]' , 'return "or";'],
                 ['not[^\\w]', 'return "not";'],
                 ['in[^\\w]', 'return "in";'],
+                ['has[^\\w]', 'return "has";'],
                 ['of[^\\w]', 'return "of";'],
 
                 ['\\s+',  ''], // skip whitespace
@@ -129,6 +130,7 @@ function filtrexParser() {
             ['left', 'or'],
             ['left', 'and'],
             ['left', 'in'],
+            ['left', 'has'],
             ['left', 'of'],
             ['left', '==', '!='],
             ['left', '<', '<=', '>', '>='],
@@ -162,22 +164,22 @@ function filtrexParser() {
                 ['e >= e' , code(['Number(', 1, '>=', 3, ')'])],
                 ['e ? e : e', code([1, '?', 3, ':', 5])],
                 ['( e )'  , code([2])],
+                ['( argsList , e )', code(['[', 2, ', ', 4, ']'])],
                 ['NUMBER' , code([1])],
                 ['STRING' , code(['"', 1, '"'])],
                 ['SYMBOL' , code(['data["', 1, '"]'])],
                 ['SYMBOL ( argsList )', code(['(functions.hasOwnProperty("', 1, '") ? functions.', 1, '(', 3, ') : unknown("', 1, '"))'])],
-                ['e in ( inSet )', code([1, ' in (function(o) { ', 4, 'return o; })({})'])],
-                ['e not in ( inSet )', code(['!(', 1, ' in (function(o) { ', 5, 'return o; })({}))'])],
+                ['e in e', code([3, '.indexOf(', 1, ') !== -1'])],
+                ['e has e', code([1, '.indexOf(', 3, ') !== -1'])],
+                ['e not in e', code([4, '.indexOf(', 1, ') === -1'])],
+                ['e has not e', code([1, '.indexOf(', 4, ') === -1'])],
                 ['SYMBOL of e', code(['map(', 3, ',"', 1, '")'])],
             ],
+
             argsList: [
                 ['e', code([1], true)],
                 ['argsList , e', code([1, ',', 3], true)],
-            ],
-            inSet: [
-                ['e', code(['o[', 1, '] = true; '], true)],
-                ['inSet , e', code([1, 'o[', 3, '] = true; '], true)],
-            ],
+            ]       
         }
     };
     return new Jison.Parser(grammar);

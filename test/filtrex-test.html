@@ -62,8 +62,11 @@ tests({
         eq(1, compileExpression('(0 and 1) or 1')());
         eq(0, compileExpression('0 and (1 or 1)')());
         eq(1, compileExpression('0 and 1 or 1')()); // or is higher precedence
+        eq(1, compileExpression('(0 and 1) or (1 and 1)')());
         eq(1, compileExpression('1 or 1 and 0')()); // or is higher precedence
         eq(0, compileExpression('not 1 and 0')()); // not is higher precedence
+        eq(0, compileExpression('not 1 and 1')()); // not is higher precedence
+        eq(0, compileExpression('not (1 and 1)')());
     },
 
     'comparisons': function() {
@@ -92,6 +95,15 @@ tests({
         eq(1, compileExpression('3 in (1, 2, 3, 4)')());
         eq(1, compileExpression('5 not in (1, 2, 3, 4)')());
         eq(0, compileExpression('3 not in (1, 2, 3, 4)')());
+    },
+
+    'has / has not': function() {
+        eq(0, compileExpression('(1, 2, 3, 4) has 5')());
+        eq(1, compileExpression('(1, 2, 3, 4) has 3')());
+        eq(0, compileExpression('not ((1, 2, 3, 4) has 3)')());
+        eq(1, compileExpression('(1, 2, 3, 4) has not 5')());
+        eq(0, compileExpression('(1, 2, 3, 4) has not 3')());
+        eq(1, compileExpression('(1, 2, 3, 4) has not 3 or 1')());
     },
 
     'string test': function() {
@@ -139,6 +151,11 @@ tests({
             max: function(o){ return Math.max.apply(null, o);}
         })({'objects':[
             {'prop': 1},{'prop': 2},{'prop': 3}
+        ]}));
+        eq(1, compileExpression('2 in prop of objects', {
+            max: function(o){ return Math.max.apply(null, o);}
+        })({'objects':[
+          {'prop': 1},{'prop': 2},{'prop': 3}
         ]}));
         eq(3, compileExpression('max(foo.bar of objects)', {
             max: function(o){ return Math.max.apply(null, o);}
