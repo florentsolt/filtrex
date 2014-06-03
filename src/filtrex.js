@@ -172,7 +172,7 @@ function filtrexParser() {
                 ['e in e', code([3, '.indexOf(', 1, ') !== -1'])],
                 ['e has e', code([1, '.indexOf(', 3, ') !== -1'])],
                 ['e not in e', code([4, '.indexOf(', 1, ') === -1'])],
-                ['e has not e', code([1, '.indexOf(', 4, ') === -1'])],
+//                ['e has not e', code([1, '.indexOf(', 4, ') === -1'])],
                 ['SYMBOL of e', code(['map(', 3, ',"', 1, '")'])],
             ],
 
